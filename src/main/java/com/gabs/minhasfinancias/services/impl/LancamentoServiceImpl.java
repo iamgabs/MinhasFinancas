@@ -4,6 +4,7 @@ import com.gabs.minhasfinancias.annotations.Description;
 import com.gabs.minhasfinancias.exception.RegraNegocioException;
 import com.gabs.minhasfinancias.model.entity.Lancamento;
 import com.gabs.minhasfinancias.model.enums.StatusLancamento;
+import com.gabs.minhasfinancias.model.enums.TipoLancamento;
 import com.gabs.minhasfinancias.repositories.LancamentoRepository;
 import com.gabs.minhasfinancias.services.LancamentoService;
 import org.springframework.data.domain.Example;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class LancamentoServiceImpl implements LancamentoService {
@@ -28,7 +30,7 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Transactional
     public Lancamento salvar(Lancamento lancamento) {
         this.validar(lancamento);
-        lancamento.setStatus(StatusLancamento.PENDENTE); // setar status de lançamento como pendente
+        lancamento.setStatus(StatusLancamento.PENDENDTE); // setar status de lançamento como pendente
         return repository.save(lancamento);
     }
 
@@ -95,5 +97,25 @@ public class LancamentoServiceImpl implements LancamentoService {
         if(lancamento.getTipo() == null){
             throw new RegraNegocioException("Informe um tipo de lançamento");
         }
+    }
+
+    @Override
+    public Optional<Lancamento> buscarPorId(long id) {
+        return repository.findById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BigDecimal obterSaldoPorUsuario(Long id) {
+        BigDecimal receitas = repository.obterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.RECEITA);
+        BigDecimal despesas = repository.obterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.DESPESA);
+        if(receitas == null ){
+            receitas = BigDecimal.ZERO;
+        }
+        if(despesas == null) {
+            despesas = BigDecimal.ZERO;
+        }
+
+        return receitas.subtract(despesas);
     }
 }
