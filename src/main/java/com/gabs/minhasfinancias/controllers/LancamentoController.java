@@ -50,6 +50,19 @@ public class LancamentoController {
         return lancamento;
     }
 
+    private LancamentoDTO converter(Lancamento lancamento){
+        return LancamentoDTO.builder()
+                .id(lancamento.getId())
+                .descricao(lancamento.getDescricao())
+                .ano(lancamento.getAno())
+                .mes(lancamento.getMes())
+                .valor(lancamento.getValor())
+                .tipo(lancamento.getTipo().name())
+                .status(lancamento.getStatus().name())
+                .usuario(lancamento.getUsuario().getId())
+                .build();
+    }
+
     @PostMapping
     public ResponseEntity salvar(@RequestBody LancamentoDTO dto)  {
         Lancamento lancamentoEntity = converter(dto);
@@ -111,12 +124,14 @@ public class LancamentoController {
     public ResponseEntity buscar(@RequestParam(value = "descricao", required = false) String descricao,
                                  @RequestParam(value = "mes", required = false) Integer mes,
                                  @RequestParam(value = "ano", required = false) Integer ano,
+                                 @RequestParam(value = "tipo", required = false) TipoLancamento tipo,
                                  @RequestParam("usuario") Long idUsuario ){
 
         Lancamento lancamentoFiltro =  new Lancamento();
         lancamentoFiltro.setDescricao(descricao);
         lancamentoFiltro.setMes(mes);
         lancamentoFiltro.setAno(ano);
+        lancamentoFiltro.setTipo(tipo);
         Optional<Usuario> usuario = usuarioService.obterPorId(idUsuario);
         if(usuario.isPresent()) {
             lancamentoFiltro.setUsuario(usuario.get());
@@ -125,6 +140,13 @@ public class LancamentoController {
         }
         List<Lancamento> lancamentos = lancamentoService.buscar(lancamentoFiltro);
         return ResponseEntity.ok().body(lancamentos);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity buscarPorId(@PathVariable("id") Long id){
+        return lancamentoService.buscarPorId(id)
+                .map( lancamento -> new ResponseEntity(this.converter(lancamento), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity(HttpStatus.NOT_FOUND));
     }
 
 }

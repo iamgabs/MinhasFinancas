@@ -30,7 +30,7 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Transactional
     public Lancamento salvar(Lancamento lancamento) {
         this.validar(lancamento);
-        lancamento.setStatus(StatusLancamento.PENDENDTE); // setar status de lançamento como pendente
+        lancamento.setStatus(StatusLancamento.PENDENTE); // setar status de lançamento como pendente
         return repository.save(lancamento);
     }
 
@@ -107,8 +107,8 @@ public class LancamentoServiceImpl implements LancamentoService {
     @Override
     @Transactional(readOnly = true)
     public BigDecimal obterSaldoPorUsuario(Long id) {
-        BigDecimal receitas = repository.obterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.RECEITA);
-        BigDecimal despesas = repository.obterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.DESPESA);
+        BigDecimal receitas = repository.obterSaldoPorTipoLancamentoEUsuarioEStatus(id, TipoLancamento.RECEITA, StatusLancamento.EFETIVADO);
+        BigDecimal despesas = repository.obterSaldoPorTipoLancamentoEUsuarioEStatus(id, TipoLancamento.DESPESA, StatusLancamento.EFETIVADO);
         if(receitas == null ){
             receitas = BigDecimal.ZERO;
         }

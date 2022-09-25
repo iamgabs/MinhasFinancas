@@ -1,7 +1,7 @@
 package com.gabs.minhasfinancias.model.enums;
 
 public enum StatusLancamento {
-    PENDENDTE,
+    PENDENTE,
     CANCELADO,
     EFETIVADO;
 }
