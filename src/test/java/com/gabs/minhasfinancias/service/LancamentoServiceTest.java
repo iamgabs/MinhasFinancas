@@ -39,14 +39,14 @@ public class LancamentoServiceTest {
 
         Lancamento lancamentoSalvo =  LancamentoRepositoryTest.criarLancamento();
         lancamentoSalvo.setId(1L);
-        lancamentoSalvo.setStatus(StatusLancamento.PENDENDTE);
+        lancamentoSalvo.setStatus(StatusLancamento.PENDENTE);
 
         Mockito.when(repository.save(lancamentoParaSerSalvo)).thenReturn(lancamentoSalvo);
 
         Lancamento lancamento = service.salvar(lancamentoParaSerSalvo);
 
         Assertions.assertThat(lancamento.getId()).isEqualTo(lancamentoSalvo.getId());
-        Assertions.assertThat(lancamento.getStatus()).isEqualTo(StatusLancamento.PENDENDTE);
+        Assertions.assertThat(lancamento.getStatus()).isEqualTo(StatusLancamento.PENDENTE);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class LancamentoServiceTest {
     public void deveAtualizarUmLancamento() {
         Lancamento lancamentoSalvo = LancamentoRepositoryTest.criarLancamento();
         lancamentoSalvo.setId(1L);
-        lancamentoSalvo.setStatus(StatusLancamento.PENDENDTE);
+        lancamentoSalvo.setStatus(StatusLancamento.PENDENTE);
 
         Mockito.doNothing().when(service).validar(lancamentoSalvo);
 
@@ -122,7 +122,7 @@ public class LancamentoServiceTest {
     public void deveAtualizarOStatusDeUmLancamento(){
         Lancamento lancamento = LancamentoRepositoryTest.criarLancamento();
         lancamento.setId(1L);
-        lancamento.setStatus(StatusLancamento.PENDENDTE);
+        lancamento.setStatus(StatusLancamento.PENDENTE);
 
         StatusLancamento statusLancamento = StatusLancamento.EFETIVADO;
         Mockito.doReturn(lancamento).when(service).atualizar(lancamento);

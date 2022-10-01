@@ -36,7 +36,7 @@ public class LancamentoRepositoryTest {
                 .descricao("lancamento")
                 .valor(BigDecimal.valueOf(10))
                 .tipo(TipoLancamento.RECEITA)
-                .status(StatusLancamento.PENDENDTE)
+                .status(StatusLancamento.PENDENTE)
                 .dataCadastro(LocalDate.now())
                 .build();
     }
